@@ -13,7 +13,8 @@
             ],
             "cwd": "${fileDirname}",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "localRoot": "${workspaceFolder}"
         }
     ]
 }
