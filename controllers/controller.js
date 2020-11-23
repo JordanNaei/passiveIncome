@@ -1,5 +1,6 @@
 const axios = require("axios");
 const db = require('../models');
+var CircularJSON = require('circular-json');
 
 
 module.exports = function (app) {
@@ -22,130 +23,126 @@ module.exports = function (app) {
       var asin_N = result.dataValues.asin_n;
       var upc_N = result.dataValues.upc_n;
       var queryURL = "https://api.priceapi.com/v2/jobs?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ";
-      axios({
-        method: 'post',
-        url: queryURL,
-        data: {
-          source: "ebay",
-          country: "us",
-          topic: "product_and_offers",
-          key: "gtin",
-          values: upc_N,
-          max_age: 43200,
-          //     max_pages: 50,
-          //     condition: "any",
-        }
-      }).then(function (response) {
-        const jodId = response.data.job_id
-        var queryJobURL = `https://api.priceapi.com/v2/jobs/${jodId}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+      axios.all([
         axios({
-          method: 'Get',
-          url: queryJobURL,
-        }).then(function (response) {
-          if (response.data.status == 'finished') {
-            var queryURL = `https://api.priceapi.com/v2/jobs/${jodId}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-            axios({
-              method: 'Get',
-              url: queryURL,
-            }).then(function (response) {
-              console.log(response.data.results);
-            })
-          } else {
-            console.log("we are calling back");
-            getIt(queryJobURL, jodId)
-          };
-          // this is the get for the job status
+          method: 'post',
+          url: queryURL,
+          data: {
+            source: "ebay",
+            country: "us",
+            topic: "product_and_offers",
+            key: "gtin",
+            values: upc_N,
+            max_age: 43200,
+            //     max_pages: 50,
+            //     condition: "any",
+          }
+        }),
+        axios({
+          method: 'post',
+          url: queryURL,
+          data: {
+            source: "amazon",
+            country: "us",
+            topic: "product_and_offers",
+            key: "asin",
+            values: asin_N,
+            // max_age: 43200,
+            //     max_pages: 50,
+            //     condition: "any",
+          }
         })
-      })
+      ]).then(axios.spread((data1, data2) => {
+        var joId1 = data1.data.job_id;
+        var joId2 = data2.data.job_id;
+        console.log(joId1, joId2);
+        var queryJobURL1 = `https://api.priceapi.com/v2/jobs/${joId1}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+        var queryJobURL2 = `https://api.priceapi.com/v2/jobs/${joId2}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+        axios.all([
+          axios({
+            method: 'get',
+            url: queryJobURL1,
+          }),
+          axios({
+            method: 'get',
+            url: queryJobURL2,
+          }),
+        ]).then(axios.spread((data1, data2) => {
+          console.log(data1.data.status, data2.data.status);
+          var queryURL1 = `https://api.priceapi.com/v2/jobs/${data1.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+          var queryURL2 = `https://api.priceapi.com/v2/jobs/${data2.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+          if (data1.data.status === 'finished' && data2.data.status === 'finished') {
+            console.log("Jobs are ready for download");
+            axios.all([
+              axios({
+                method: 'get',
+                url: queryURL1,
+              }),
+              axios({
+                method: 'get',
+                url: queryURL2,
+              }),
+            ]).then(axios.spread((data1, data2) => {
+              // console.log(data1, data2);
+              console.log(typeof data1);
+        const gg =   CircularJSON.stringify(data1.data);
+        res.json(gg)
+              // const hob = cleanStringify(data1.data)
+              // this is the get for the job status
+            }))
+            // This is the if statement closing tag
+          } else {
+            console.log("still waiting");
+          }
+          // this is the get for the job status
+        }))
+      }))
       // this is the asin and upc end bracket
     })
     // app.post closing tag
   })
 
   // treating the json circular issue funtion to be based down with the res.json
-const replacerFunc = () => {
-  const visited = new WeakSet();
-  return (key, value) => {
-    if (typeof value === "object" && value !== null) {
-      if (visited.has(value)) {
-        return;
+  const replacerFunc = () => {
+    const visited = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (visited.has(value)) {
+          return;
+        }
+        visited.add(value);
       }
-      visited.add(value);
-    }
-    return value;
-  };
-};
-
-async function getIt(url, id) {
-  axios({
-    method: 'Get',
-    url: url,
-  }).then(function (response) {
-    console.log(response.data.status);
-    if (response.data.status == 'finished') {
-      var queryURL = `https://api.priceapi.com/v2/jobs/${id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-      axios({
-        method: 'Get',
-        url: queryURL,
-      }).then(function (response) {
-        console.log(response);
-        res.json(response);
-      })
-    }
-    else {
-      getIt(url, id)
+      return value;
     };
-  })
+  };
+
+  function cleanStringify(object) {
+    if (object && typeof object === 'object') {
+        object = copyWithoutCircularReferences([object], object);
+    }
+    return JSON.stringify(object);
+
+    function copyWithoutCircularReferences(references, object) {
+        var cleanObject = {};
+        Object.keys(object).forEach(function(key) {
+            var value = object[key];
+            if (value && typeof value === 'object') {
+                if (references.indexOf(value) < 0) {
+                    references.push(value);
+                    cleanObject[key] = copyWithoutCircularReferences(references, value);
+                    references.pop();
+                } else {
+                    cleanObject[key] = '###_Circular_###';
+                }
+            } else if (typeof value !== 'function') {
+                cleanObject[key] = value;
+            }
+        });
+        return cleanObject;
+    }
 }
+
 
 
   // mod exp curly bracket
 }
-
-
-
-
-
-
-
-
-
-  // // Post route (adding new burger)
-  // app.post("/api/jobs", function (req, res) {
-
-  //   var queryURL = "https://api.priceapi.com/v2/jobs?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ";
-  //   axios({
-  //     method: 'post',
-  //     url: queryURL,
-  //     data: {
-  //       source: "ebay",
-  //       country: "us",
-  //       topic: "product_and_offers",
-  //       key: "gtin",
-  //       values: "190198510426",
-  //       max_age: 43200,
-  //       //     max_pages: 50,
-  //       //     condition: "any",
-  //     }
-  //   }).then(function (response) {
-  //     const jodId = response.data.job_id
-  //     var queryJobURL = `https://api.priceapi.com/v2/jobs/${jodId}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-  //     axios({
-  //       method: 'Get',
-  //       url: queryJobURL,
-  //     }).then(function (response) {
-  //       setInterval(function () {
-  //         if (response.data.status === "finished") {
-  //           var queryURL = `https://api.priceapi.com/v2/jobs/${w}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-  //           axios({
-  //             method: 'Get',
-  //             url: queryURL,
-  //           }).then(function (response) {
-  //             res.json(response);
-  //           })
-  //         }
-  //       })
-
-  //     })
-
-
