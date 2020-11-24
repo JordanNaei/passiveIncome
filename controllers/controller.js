@@ -5,13 +5,18 @@ var CircularJSON = require('circular-json');
 
 module.exports = function (app) {
 
-    app.get("/", function (req, res) {
-        db.iPhones.findAll({}).then(function (result) {
-            var phones = { list: result };
-            console.log(phones);
-            // res.json(result)
-            res.render("index", phones);
-        })
+    app.get("/", async function (req, res) {
+
+        var getResult = await db.iPhones.findAll({});
+        console.log(getResult);
+        for (let i = 0; i < getResult.length; i++) {
+            getResult[i].capacity = getResult[i].capacity.split(",");
+        }
+        console.log(getResult);
+        var phones = { list: getResult };
+        // res.render("index", phones);
+        res.render("result", phones);
+
     })
 
     app.post("/api/jobs/:id", async function (req, res) {
@@ -34,8 +39,6 @@ module.exports = function (app) {
                 key: "gtin",
                 values: upc_N,
                 max_age: 43200,
-                //     max_pages: 50,
-                //     condition: "any",
             }
         })
         var result2 = await axios({
@@ -47,9 +50,6 @@ module.exports = function (app) {
                 topic: "product_and_offers",
                 key: "asin",
                 values: asin_N,
-                // max_age: 43200,
-                //     max_pages: 50,
-                //     condition: "any",
             }
         })
         var joId1 = result1.data.job_id;
@@ -80,12 +80,16 @@ module.exports = function (app) {
             method: 'get',
             url: queryURL2,
         })
-        res.json(fRes1.data, fRes2.data)
-
-
-        // this is the get for the job status
-        // this is the asin and upc end bracket
-        // app.post closing tag
+        res.json({
+            r1: fRes1.data,
+            r2: fRes2.data
+        })
+        // var checkResponse = fRes2.data;
+        // console.log(typeof checkResponse);
+        // const clean = CircularJSON.stringify(checkResponse);
+        // const cleanObj = JSON.parse(clean);
+        // res.json(cleanObj);
+        // This is where we will work today to complete the results' validations and processing and populating the correct elements into the handlebars models
     })
 
     // treating the json circular issue funtion to be based down with the res.json
@@ -127,8 +131,6 @@ module.exports = function (app) {
     //         return cleanObject;
     //     }
     // }
-
-
 
     // mod exp curly bracket
 }

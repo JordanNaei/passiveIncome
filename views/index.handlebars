@@ -1,3 +1,10 @@
+<nav class="nav navStyle justify-content-center navi">
+    <div class="text-center">
+        <a class="nav-link active text-center deal" href="#">The Passive Deal</a>
+    </div>
+    {{!-- <a class="nav-link" href="#">Link</a>
+    <a class="nav-link" href="#">Link</a> --}}
+</nav>
 <div class="container text-center">
     <div class="card h-100 backg1 text-center yannal">
         <img src="/img/phones.jpg" class="card-img-top meanBur" alt="Burger image">
@@ -5,39 +12,29 @@
             <div>
                 <h6 class="card-title titl">Please Pick Your Product!</h6>
             </div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    iPhones
-                </button>
-                <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+            <div class="btn-group dropup">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                    aria-expanded="false">iPhones</button>
+                <ul class="dropdown-menu">
+                    {{#each list}}
                     <li class="dropdown-submenu">
-                        <a class="dropdown-item" tabindex="-1" href="#">Hover me for more options</a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-item"><a tabindex="-1" href="#">Second level</a></li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item" href="#">Even More..</a>
-                                <ul class="dropdown-menu">
-                                    <li class="dropdown-item"><a href="#">3rd level</a></li>
-                                    <li class="dropdown-submenu"><a class="dropdown-item" href="#">another level</a>
-                                        <ul class="dropdown-menu">
-                                            <li class="dropdown-item" data-id= {{id}}><a href="#">iphone5</a></li>
-                                            <li class="dropdown-item"><a href="#">iphone6</a></li>
-                                            <li class="dropdown-item"><a href="#">iphone7</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown-item"><a href="#">3rd level</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-item"><a href="#">Second level</a></li>
-                            <li class="dropdown-item"><a href="#">Second level</a></li>
+                        <a class="dropdown-item" tabindex="-1" href="#">{{model}}</a>
+                        <ul class="dropdown-menu" data-id={{id}}>
+                            {{#each capacity}}
+                            <li><a class="dropdown-item capacitySelect" tabindex="-1" href="#">{{.}}</a></li>
+                            {{/each}}
                         </ul>
                     </li>
+                    {{/each}}  
                 </ul>
             </div>
-
         </div>
     </div>
 </div>
-
-</div>
+<footer id="footer">
+    <i class="f-icon fab fa-twitter"></i>
+    <i class="f-icon fab fa-facebook"></i>
+    <i class="f-icon fab fa-instagram"></i>
+    <i class="f-icon fas fa-envelope"></i>
+    <p class="footer-p">© Copyright 2020 JAAM Inc</p>
+</footer>
