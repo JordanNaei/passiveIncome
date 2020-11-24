@@ -57,33 +57,43 @@ module.exports = function (app) {
         console.log(joId1, joId2);
         var queryJobURL1 = `https://api.priceapi.com/v2/jobs/${joId1}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
         var queryJobURL2 = `https://api.priceapi.com/v2/jobs/${joId2}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-        var gRes1 = await axios({
-            method: 'get',
-            url: queryJobURL1,
-        })
-        var gRes2 = await axios({
-            method: 'get',
-            url: queryJobURL2,
-        })
 
-        console.log(gRes1.data.status, gRes2.data.status);
+        const statusTimer = setInterval(async () => {
 
-        var queryURL1 = `https://api.priceapi.com/v2/jobs/${gRes1.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-        var queryURL2 = `https://api.priceapi.com/v2/jobs/${gRes2.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+            var gRes1 = await axios({
+                method: 'get',
+                url: queryJobURL1,
+            })
+            var gRes2 = await axios({
+                method: 'get',
+                url: queryJobURL2,
+            })
 
-        var fRes1 = await axios({
-            method: 'get',
-            url: queryURL1,
-        })
+            if (gRes1.data.status === 'finished' && gRes2.data.status === 'finished') {
+                clearInterval(statusTimer);
+                var queryURL1 = `https://api.priceapi.com/v2/jobs/${gRes1.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
+                var queryURL2 = `https://api.priceapi.com/v2/jobs/${gRes2.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
 
-        var fRes2 = await axios({
-            method: 'get',
-            url: queryURL2,
-        })
-        res.json({
-            r1: fRes1.data,
-            r2: fRes2.data
-        })
+                var fRes1 = await axios({
+                    method: 'get',
+                    url: queryURL1,
+                })
+
+                var fRes2 = await axios({
+                    method: 'get',
+                    url: queryURL2,
+                })
+
+                console.log(fRes1.data, fRes2.data);
+                const r = fRes1.data.results[0].content.offers;
+                console.log(r);
+                res.json({
+                    r1: r,
+                    r2: fRes2.data.results[0].content.offers,
+                })
+            };
+        }, 2000);
+
         // var checkResponse = fRes2.data;
         // console.log(typeof checkResponse);
         // const clean = CircularJSON.stringify(checkResponse);
