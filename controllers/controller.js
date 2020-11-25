@@ -1,6 +1,6 @@
-const axios = require('axios');
-const db = require('../models');
-const math = require('mathjs');
+var axios = require('axios');
+var db = require('../models');
+var math = require('mathjs');
 
 
 module.exports = function (app) {
@@ -21,10 +21,12 @@ module.exports = function (app) {
                 id: req.params.id
             }
         })
-        var asin_N = result.dataValues.asin_n;
-        var upc_N = result.dataValues.upc_n;
-        var queryURL = "https://api.priceapi.com/v2/jobs?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ";
         try {
+            var asin_N = result.dataValues.asin_n;
+            var upc_N = result.dataValues.upc_n;
+            var queryURL = "https://api.priceapi.com/v2/jobs?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ";
+
+
             var result1 = await axios({
                 method: 'post',
                 url: queryURL,
@@ -48,34 +50,29 @@ module.exports = function (app) {
                     values: asin_N,
                 }
             })
+
+            var joId1 = result1.data.job_id;
+            var joId2 = result2.data.job_id;
+            console.log(joId1, joId2);
         } catch (err) {
-            const badRes = {
-                message: "Unexpected Erorr occured pleasse try again later"
+            var badRes = {
+                message: "Unexpected erorr occured try again later!"
             }
             res.render("errorLandingP", badRes);
         }
-        var joId1 = result1.data.job_id;
-        var joId2 = result2.data.job_id;
-        console.log(joId1, joId2);
         var queryJobURL1 = `https://api.priceapi.com/v2/jobs/${joId1}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
         var queryJobURL2 = `https://api.priceapi.com/v2/jobs/${joId2}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
 
-        const statusTimer = setInterval(async () => {
-            try {
-                var gRes1 = await axios({
-                    method: 'get',
-                    url: queryJobURL1,
-                })
-                var gRes2 = await axios({
-                    method: 'get',
-                    url: queryJobURL2,
-                })
-            } catch (err) {
-                const badRes = {
-                    message: "Unexpected Erorr occured pleasse try again later"
-                }
-                res.render("errorLandingP", badRes);
-            }
+        var statusTimer = setInterval(async () => {
+            var gRes1 = await axios({
+                method: 'get',
+                url: queryJobURL1,
+            })
+            var gRes2 = await axios({
+                method: 'get',
+                url: queryJobURL2,
+            })
+
             if (gRes1.data.status === 'finished' && gRes2.data.status === 'finished') {
                 clearInterval(statusTimer);
                 var queryURL1 = `https://api.priceapi.com/v2/jobs/${gRes1.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
@@ -92,14 +89,14 @@ module.exports = function (app) {
                         url: queryURL2,
                     })
                 } catch (err) {
-                    const badRes = {
-                        message: "Unexpected Erorr occured pleasse try again later"
+                    var badRes = {
+                        message: "Unexpected erorr occured try again later!"
                     }
                     res.render("errorLandingP", badRes);
                 }
                 try {
-                    const eBayOffers = fRes1.data.results[0].content.offers;
-                    const amazonOffers = fRes2.data.results[0].content.offers;
+                    var eBayOffers = fRes1.data.results[0].content.offers;
+                    var amazonOffers = fRes2.data.results[0].content.offers;
                     // The math section for Ebay 
                     var eNumOfDeals = eBayOffers.length;
                     var ePrices = [];
@@ -112,7 +109,7 @@ module.exports = function (app) {
                     for (i = 0; i < eNumOfDeals; i++) { eshipCost.push(eBayOffers[i].shipping_costs) };
                     var avrPrice = math.mean(ePrices).toFixed(2);
                     ePrices.sort((a, b) => a - b);
-                    var highesP = ePrices[ePrices.length - 1];
+                    var highesP = ePrices[ePrices.length - 4];
                     var lowestP = ePrices[0];
                     eshipCost.sort((a, b) => a - b);
                     var hShipCost = eshipCost[eshipCost.length - 1];
@@ -149,8 +146,8 @@ module.exports = function (app) {
                         avrP: aArPrice
                     }
                 } catch (err) {
-                    const badRes = {
-                        message: "Unexpected Erorr occured pleasse try again later"
+                    var badRes = {
+                        message: "Unexpected erorr occured try again later!"
                     }
                     res.render("errorLandingP", badRes);
                 }
@@ -165,7 +162,6 @@ module.exports = function (app) {
                     sC: shC,
                     nIn: netInc
                 }
-
                 res.render("resultPage", {
                     eb: eBayObj,
                     am: amazonObj,

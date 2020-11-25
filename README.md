@@ -5,7 +5,7 @@
 # Description
 
 
-# Application Functionalities illustration video
+# Application Image
 ![]()
 
 ## Technologies and Frameworks Used
@@ -13,6 +13,9 @@
 - Express.
 - Handlebars.
 - My SQL.
+- Heroku.
+- Sequalize.
+
 
 # Installation
 - Run npm i.

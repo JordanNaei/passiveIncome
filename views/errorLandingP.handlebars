@@ -1,23 +1,38 @@
+<style>
+    body {
+        background-image: url("/img/theOne.jpg") !important;
+    }
+
+    .backg1 {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+    .navi{
+        margin-bottom:30px;
+    }
+</style>
+<nav class="nav navStyle justify-content-center navi">
+    <div class="text-center">
+        <a class="nav-link active text-center deal" href="/">The Passive Deal</a>
+    </div>
+</nav>
 <div class="container">
-    <h1 class="text-center heading titl1">Passive Deal</h1>
-    <div class="row row-cols-1 row-cols-md-3 bCont">
-        <div class="col mb-4 ">
-            <div class="card h-100 backg1">
+    {{!-- <div class="row row-cols-1 row-cols-md-3"> --}}
+        <div class="col mb-4">
+            <div class="card h-100 backg1 errorLand">
                 <div class="card-body text-center">
                     <div>
-                        <h5 class="card-title dBurg"><b>Opps 🤔🤔🤔!</b></h5>
+                        <h5 class="card-title"><b>Opps 🤔🤔🤔!</b></h5>
                     </div>
                     <div class="">
                         <p>{{message}}</p>
-                        <form action="" method="" class="toBeDevList text-left">{{this.burger_name}}
-                            <button type="submit" class="btn btn-outline-success pull-right devourBur"
-                                data-id="{{this.id}}" data-isDevoured="{{this.devoured}}">Check Other Deals!</button>
+                        <form action="/" method="GET" class="">
+                            <button type="submit" class="btn btn-warning">Check Other Deals!</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{!-- </div> --}}
 </div>
 <footer id="footer">
     <i class="f-icon fab fa-twitter"></i>

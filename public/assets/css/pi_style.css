@@ -3,7 +3,8 @@
 }
 
 body {
-  background-image: url("/img/pg5.jpg");
+  background-image: url("/img/210906.jpg");
+  /* filter: brightness(0) !important; */
   font-family: 'Hind Vadodara', sans-serif;
   font-size: 16px;
   line-height: 1;
@@ -23,10 +24,11 @@ body {
 }
 
 .navStyle {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(94, 42, 42, 0) !important;
   color: white !important;
-  margin: 10px !important;
+  margin-top: 20px !important;
   padding: 0 !important;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .navi {
@@ -34,7 +36,7 @@ body {
 }
 
 .deal {
-  color: #aeefec !important;
+  color:#ffc107;
   font-size: 2rem !important;
   font-weight: bold !important;
 }
@@ -65,11 +67,7 @@ body {
   animation:fire 1s linear infinite;
 } */
 
-.yannal {
-  margin-top: 20% !important;
-}
-
-.titl {
+/* .titl {
   font-weight: 900 !important;
   text-transform: uppercase;
   text-align: center;
@@ -79,67 +77,44 @@ body {
   background-clip: text;
   background-size: contain;
   animation: fire 0.6s linear infinite;
-}
+} */
 
-@keyframes fire {
-  /* 0%{
-        background-position: left 0 top 20px;
-    } */
+/* @keyframes fire {
   50% {
     background-position: left 10px top 5px;
   }
   100% {
     background-position: left -10px top 0px;
   }
-}
+} */
 
-.bCont {
-  margin-top: 150px !important;
-}
 
 .backg1 {
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  color: white !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  /* color:#f2d974 !important; */
+  /* font-weight: bold !important; */
   border-radius: 30px;
 }
 
-/* .backg2 {
-  background-color: rgba(0, 0, 0, 0.8) !important;
-  color: white !important;
-} */
-
-.meanBur {
+ .meanBur {
   border-radius: 50px !important;
   width: 100px !important;
   margin: auto !important;
   padding-top: 10px !important;
-}
-
-.addBur {
-  margin: 100px !important;
-}
-
-.toBeDevList {
-  padding: 10px;
-}
-
-.dBurg {
+} 
+.dDeal {
   color: #21bf73 !important;
 }
 
-.fireBur {
-  color: #ec524b !important;
-}
 
 /* The drop  */
-
-
 .dropdown-submenu {
   position: relative;
+  background-color: rgb(240, 173, 78) !important;
 }
 
 .dropdown-submenu>a.dropdown-item:after {
-  font-family: FontAwesome;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   content: "\f054";
   float: right;
 }
@@ -154,6 +129,7 @@ body {
   left: 100%;
   margin-top: 0px;
   margin-left: 0px;
+  background-color: rgb(240, 173, 78) !important;
 }
 
 .dropdown-submenu:hover > .dropdown-menu {
@@ -163,8 +139,22 @@ body {
 /* footer styling */
 
 #footer {
+  position: fixed !important;
+  bottom: 0;
+  width: 100%;
+  /* background-color: rgba(255,255, 0, 0.9) !important; */
   text-align: center;
   padding: 30px;
-  color: #222831;
+  color: white !important;
   font-weight: bolder !important;
 }
+.footer-p{
+  padding: 10px !important;
+}
+
+/* Error landing page styling */
+.errorLand{
+  margin-top: 10% !important;
+}
+
+.final{margin-top: 10% !important;}
