@@ -56,7 +56,7 @@ module.exports = function (app) {
             console.log(joId1, joId2);
         } catch (err) {
             var badRes = {
-                message: "Unexpected erorr occured try again later!"
+                message: "Unexpected error occured try again later!"
             }
             res.render("errorLandingP", badRes);
         }
@@ -90,7 +90,7 @@ module.exports = function (app) {
                     })
                 } catch (err) {
                     var badRes = {
-                        message: "Unexpected erorr occured try again later!"
+                        message: "Unexpected error occured try again later!"
                     }
                     res.render("errorLandingP", badRes);
                 }
@@ -147,7 +147,7 @@ module.exports = function (app) {
                     }
                 } catch (err) {
                     var badRes = {
-                        message: "Unexpected erorr occured try again later!"
+                        message: "Unexpected error occured try again later!"
                     }
                     res.render("errorLandingP", badRes);
                 }

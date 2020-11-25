@@ -6,33 +6,45 @@
     .backg1 {
         background-color: rgba(0, 0, 0, 0.5) !important;
     }
-    .navi{
-        margin-bottom:30px;
+
+    .navi {
+        margin-bottom: 30px;
+    }
+
+    .eH {
+        color: #21bf73 !important;
+    }
+
+    .eM {
+        color: white !important;
+    }
+    .middleM{
+        margin: auto !important;
     }
 </style>
 <nav class="nav navStyle justify-content-center navi">
     <div class="text-center">
-        <a class="nav-link active text-center deal" href="/">The Passive Deal</a>
+        <a class="nav-link active text-center deal" href="/">Passive Deal</a>
     </div>
 </nav>
 <div class="container">
-    {{!-- <div class="row row-cols-1 row-cols-md-3"> --}}
-        <div class="col mb-4">
-            <div class="card h-100 backg1 errorLand">
-                <div class="card-body text-center">
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col mb-4 middleM">
+            <div class="card h-100 backg1 errorLand text-center">
+                <div class="card-body">
                     <div>
-                        <h5 class="card-title"><b>Opps 🤔🤔🤔!</b></h5>
+                        <h5 class="card-title eH"><b>Opps 🤔🤔🤔!</b></h5>
                     </div>
                     <div class="">
-                        <p>{{message}}</p>
-                        <form action="/" method="GET" class="">
-                            <button type="submit" class="btn btn-warning">Check Other Deals!</button>
+                        <p class="eM">{{message}}</p>
+                        <form action="/" method="GET" class="buttonCenter">
+                            <button type="submit" class="btn btn-warning"><b>Your Next Deal!</b></button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    {{!-- </div> --}}
+    </div>
 </div>
 <footer id="footer">
     <i class="f-icon fab fa-twitter"></i>

@@ -56,6 +56,10 @@ body {
   font-family: 'Architects Daughter', cursive !important;
 }
 
+.titl {
+  color:#21bf73  !important;
+}
+
 /* .titl1 {
   text-transform: uppercase;
   text-align: center;
@@ -157,4 +161,10 @@ body {
   margin-top: 10% !important;
 }
 
-.final{margin-top: 10% !important;}
+.final{
+  margin-top: 10% !important;
+  width: 300px !important;
+  margin: auto auto;
+  border-radius: 40px !important;
+
+}
