@@ -1,0 +1,63 @@
+<div class="container">
+    <h1 class="text-center heading titl1">Passive Deal</h1>
+    <div class="row row-cols-1 row-cols-md-3 bCont">
+        <div class="col mb-4 ">
+            <div class="card h-100 backg1">
+                <div class="card-body text-center">
+                    <div>
+                        <h5 class="card-title dBurg"><b><i class="fab fa-amazon fa-2x"></i></b></h5>
+                    </div>
+                    <div class="">
+                        <p> Number of Offers: {{eb.nOf}}</p>
+                        <p> Highest Price: {{eb.hPrice}}</p>
+                        <p> Lowest Price: {{eb.lPrice}}</p>
+                        <p>Average Price: {{eb.avrP}}</p>
+                        <p>Cost of Shipping: {{eb.sCosr}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4 ">
+            <div class="card h-100 backg1">
+                <div class="card-body text-center">
+                    <div>
+                        <h5 class="card-title dBurg"><b>The Winnig Deal!</b></h5>
+                    </div>
+                    <div class="">
+                        <p> Expected Rev: {{f.rev}}</p>
+                        <p> Expected Net Income: {{f.nIn}}</p>
+                        <p> Expected Shipping Cost: {{f.sC}}</p>
+                        <form action="" method="" class="toBeDevList text-left">{{this.burger_name}}
+                            <button type="submit" class="btn btn-outline-success pull-right devourBur"
+                                data-id="{{this.id}}" data-isDevoured="{{this.devoured}}">Check Other Deals!</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4 ">
+            <div class="card h-100 backg1">
+                <div class="card-body text-center">
+                    <div>
+                        <h5 class="card-title dBurg"><b><i class="fab fa-ebay fa-2x"></i></b></h5>
+                    </div>
+                    <div class="">
+                        <p> Number of Offers: {{am.nOf}}</p>
+                        <p> Highest Price: {{am.hPrice}}</p>
+                        <p> Lowest Price: {{am.lPrice}}</p>
+                        <p>Average Price: {{am.avrP}}</p>
+                        <p>Cost of Shipping: {{am.sCosr}}</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <i class="f-icon fab fa-twitter"></i>
+    <i class="f-icon fab fa-facebook"></i>
+    <i class="f-icon fab fa-instagram"></i>
+    <i class="f-icon fas fa-envelope"></i>
+    <p class="footer-p">© Copyright 2020 JAAM Inc</p>
+</footer>

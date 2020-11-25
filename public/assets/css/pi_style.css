@@ -39,6 +39,9 @@ body {
   font-weight: bold !important;
 }
 
+.hide{
+  display: none !important;
+}
 /* .wrappi{
     width: 100%;
     margin: 0;

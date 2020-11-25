@@ -1,6 +1,6 @@
-const axios = require("axios");
+const axios = require('axios');
 const db = require('../models');
-var CircularJSON = require('circular-json');
+const math = require('mathjs');
 
 
 module.exports = function (app) {
@@ -8,15 +8,11 @@ module.exports = function (app) {
     app.get("/", async function (req, res) {
 
         var getResult = await db.iPhones.findAll({});
-        console.log(getResult);
         for (let i = 0; i < getResult.length; i++) {
             getResult[i].capacity = getResult[i].capacity.split(",");
         }
-        console.log(getResult);
         var phones = { list: getResult };
-        // res.render("index", phones);
-        res.render("result", phones);
-
+        res.render("index", phones);
     })
 
     app.post("/api/jobs/:id", async function (req, res) {
@@ -28,30 +24,36 @@ module.exports = function (app) {
         var asin_N = result.dataValues.asin_n;
         var upc_N = result.dataValues.upc_n;
         var queryURL = "https://api.priceapi.com/v2/jobs?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ";
-
-        var result1 = await axios({
-            method: 'post',
-            url: queryURL,
-            data: {
-                source: "ebay",
-                country: "us",
-                topic: "product_and_offers",
-                key: "gtin",
-                values: upc_N,
-                max_age: 43200,
+        try {
+            var result1 = await axios({
+                method: 'post',
+                url: queryURL,
+                data: {
+                    source: "ebay",
+                    country: "us",
+                    topic: "product_and_offers",
+                    key: "gtin",
+                    values: upc_N,
+                    max_age: 43200,
+                }
+            })
+            var result2 = await axios({
+                method: 'post',
+                url: queryURL,
+                data: {
+                    source: "amazon",
+                    country: "us",
+                    topic: "product_and_offers",
+                    key: "asin",
+                    values: asin_N,
+                }
+            })
+        } catch (err) {
+            const badRes = {
+                message: "Unexpected Erorr occured pleasse try again later"
             }
-        })
-        var result2 = await axios({
-            method: 'post',
-            url: queryURL,
-            data: {
-                source: "amazon",
-                country: "us",
-                topic: "product_and_offers",
-                key: "asin",
-                values: asin_N,
-            }
-        })
+            res.render("errorLandingP", badRes);
+        }
         var joId1 = result1.data.job_id;
         var joId2 = result2.data.job_id;
         console.log(joId1, joId2);
@@ -59,88 +61,118 @@ module.exports = function (app) {
         var queryJobURL2 = `https://api.priceapi.com/v2/jobs/${joId2}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
 
         const statusTimer = setInterval(async () => {
-
-            var gRes1 = await axios({
-                method: 'get',
-                url: queryJobURL1,
-            })
-            var gRes2 = await axios({
-                method: 'get',
-                url: queryJobURL2,
-            })
-
+            try {
+                var gRes1 = await axios({
+                    method: 'get',
+                    url: queryJobURL1,
+                })
+                var gRes2 = await axios({
+                    method: 'get',
+                    url: queryJobURL2,
+                })
+            } catch (err) {
+                const badRes = {
+                    message: "Unexpected Erorr occured pleasse try again later"
+                }
+                res.render("errorLandingP", badRes);
+            }
             if (gRes1.data.status === 'finished' && gRes2.data.status === 'finished') {
                 clearInterval(statusTimer);
                 var queryURL1 = `https://api.priceapi.com/v2/jobs/${gRes1.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
                 var queryURL2 = `https://api.priceapi.com/v2/jobs/${gRes2.data.job_id}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
 
-                var fRes1 = await axios({
-                    method: 'get',
-                    url: queryURL1,
-                })
+                try {
+                    var fRes1 = await axios({
+                        method: 'get',
+                        url: queryURL1,
+                    })
 
-                var fRes2 = await axios({
-                    method: 'get',
-                    url: queryURL2,
-                })
+                    var fRes2 = await axios({
+                        method: 'get',
+                        url: queryURL2,
+                    })
+                } catch (err) {
+                    const badRes = {
+                        message: "Unexpected Erorr occured pleasse try again later"
+                    }
+                    res.render("errorLandingP", badRes);
+                }
+                try {
+                    const eBayOffers = fRes1.data.results[0].content.offers;
+                    const amazonOffers = fRes2.data.results[0].content.offers;
+                    // The math section for Ebay 
+                    var eNumOfDeals = eBayOffers.length;
+                    var ePrices = [];
+                    var eshipCost = [];
+                    for (i = 0; i < eNumOfDeals; i++) {
+                        if (eBayOffers[i].price) {
+                            ePrices.push(eBayOffers[i].price)
+                        }
+                    }
+                    for (i = 0; i < eNumOfDeals; i++) { eshipCost.push(eBayOffers[i].shipping_costs) };
+                    var avrPrice = math.mean(ePrices).toFixed(2);
+                    ePrices.sort((a, b) => a - b);
+                    var highesP = ePrices[ePrices.length - 1];
+                    var lowestP = ePrices[0];
+                    eshipCost.sort((a, b) => a - b);
+                    var hShipCost = eshipCost[eshipCost.length - 1];
+                    console.log(hShipCost);
+                    var eBayObj = {
+                        nOf: eNumOfDeals,
+                        hPrice: highesP,
+                        lPrice: lowestP,
+                        sCosr: hShipCost,
+                        avrP: avrPrice
+                    }
+                    // The math section for Amamzon 
+                    var aNumOfDeals = amazonOffers.length;
+                    var aPrices = [];
+                    var ashipCost = [];
+                    for (i = 0; i < aNumOfDeals; i++) {
+                        if (amazonOffers[i].price) {
+                            aPrices.push(amazonOffers[i].price)
+                        }
+                    }
+                    for (i = 0; i < aNumOfDeals; i++) { ashipCost.push(amazonOffers[i].shipping_costs) };
+                    var aArPrice = math.mean(aPrices).toFixed(2);
+                    aPrices.sort((a, b) => a - b);
+                    var ahighesP = aPrices[aPrices.length - 1];
+                    var alowestP = aPrices[0];
+                    ashipCost.sort((a, b) => a - b);
+                    var ahShipCost = ashipCost[ashipCost.length - 1];
 
-                console.log(fRes1.data, fRes2.data);
-                const r = fRes1.data.results[0].content.offers;
-                console.log(r);
-                res.json({
-                    r1: r,
-                    r2: fRes2.data.results[0].content.offers,
-                })
+                    var amazonObj = {
+                        nOf: aNumOfDeals,
+                        hPrice: ahighesP,
+                        lPrice: alowestP,
+                        sCosr: ahShipCost,
+                        avrP: aArPrice
+                    }
+                } catch (err) {
+                    const badRes = {
+                        message: "Unexpected Erorr occured pleasse try again later"
+                    }
+                    res.render("errorLandingP", badRes);
+                }
+                // This is the result middle section
+                var abMaxDeal = ahighesP - lowestP;
+                var baMaxDeal = highesP - alowestP;
+                var theDeal = Math.max(abMaxDeal, baMaxDeal);
+                var shC = parseInt(ahShipCost) + parseInt(hShipCost);
+                var netInc = theDeal - shC;
+                var resObj = {
+                    rev: theDeal,
+                    sC: shC,
+                    nIn: netInc
+                }
+
+                res.render("resultPage", {
+                    eb: eBayObj,
+                    am: amazonObj,
+                    f: resObj
+                });
             };
         }, 2000);
-
-        // var checkResponse = fRes2.data;
-        // console.log(typeof checkResponse);
-        // const clean = CircularJSON.stringify(checkResponse);
-        // const cleanObj = JSON.parse(clean);
-        // res.json(cleanObj);
-        // This is where we will work today to complete the results' validations and processing and populating the correct elements into the handlebars models
     })
-
-    // treating the json circular issue funtion to be based down with the res.json
-    // const replacerFunc = () => {
-    //     const visited = new WeakSet();
-    //     return (key, value) => {
-    //         if (typeof value === "object" && value !== null) {
-    //             if (visited.has(value)) {
-    //                 return;
-    //             }
-    //             visited.add(value);
-    //         }
-    //         return value;
-    //     };
-    // };
-
-    // function cleanStringify(object) {
-    //     if (object && typeof object === 'object') {
-    //         object = copyWithoutCircularReferences([object], object);
-    //     }
-    //     return JSON.stringify(object);
-
-    //     function copyWithoutCircularReferences(references, object) {
-    //         var cleanObject = {};
-    //         Object.keys(object).forEach(function (key) {
-    //             var value = object[key];
-    //             if (value && typeof value === 'object') {
-    //                 if (references.indexOf(value) < 0) {
-    //                     references.push(value);
-    //                     cleanObject[key] = copyWithoutCircularReferences(references, value);
-    //                     references.pop();
-    //                 } else {
-    //                     cleanObject[key] = '###_Circular_###';
-    //                 }
-    //             } else if (typeof value !== 'function') {
-    //                 cleanObject[key] = value;
-    //             }
-    //         });
-    //         return cleanObject;
-    //     }
-    // }
-
     // mod exp curly bracket
 }

@@ -1,214 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Home:: Comparison</title>
-</head>
-<style type="">
-	*{
-		margin:auto 0px;
-	}
-	.container{
-		width: 100%;
-		height: 1000px;
-	}
-	.sub_containter{
-		width: 70%;
-		height: 1000px;
-		margin-left: 15%;
-	}
-	.body_part{
-		background: #fbe544;
-		width: 70%;
-		height: 800px;
-		margin-top:30px;
-		margin-left:150px;
-	}
-	.a{
-		width: 250px;
-		border:2px solid red;
-		float: left;
-		height: 250px;
-		margin-right: 10px;
-		margin-top:50px;
-		margin-left: 50px;
-	}
-	.b{
-		width: 500px;
-		border:2px solid red;
-		float: left;
-		height: 250px;
-		margin-right: 10px;
-		margin-top:50px;
-		margin-left: 80px;
-	}
-	.a_head{
-		height:50px;
-		border-bottom:2px solid red;
-	}
-	.form{
-		margin:20px;
-	}
-	.btn_comp{
-		background: red;
-		color:#fff;
-		width:200px;
-		height: 50px;
-		margin-top:20px;
-		border:2px solid red;
-	}
-	.headerrr{
-		height:50px;
-		border-bottom:2px solid red;
-	}
-	.headerrr p{
-		margin:20px;
-	}
-	.lists_para{
-		height: auto;
-	}
-	.lists_para ul li{
-		margin:20px;
-		list-style: none;
-		text-align: left;
-	}
-	.inpp{
-		background: #fbe544;
-		border:2px solid #fbe544;
-	}
-</style>
-<body>
-	<div class="container">
-		<div class="sub_containter">
-			<div class="body_part">
-				<br>
-				<br>
-				<center><h2>Results</h2></center>
-				<div class="a">
-					<div class="a_head">
-						<h3 style="text-align: center;">Ebay iPhone Details</h3>
-					</div>
-					<div class="lists_para">
-						<ul>
-							<li>Profit  :</li>
-							<li>Shipping Cost :</li>
-							<li>Model :</li>
-							<li>Spec :</li>
-						</ul>
-					</div>
-				</div>
-				<div class="a">
-					<div class="a_head"> 
-						<h3 style="text-align: center;">Amazon iPhone Details</h3>
-					</div>
-					<div class="lists_para">
-						<ul>
-							<li>Profit  :</li>
-							<li>Shipping Cost :</li>
-							<li>Model :</li>
-							<li>Spec :</li>
-						</ul>
-					</div>
-				</div>
-				<br>
-				<br>
-				<center><button type="button" class="btn_comp" id="btn_comp">Compare</button></center>
-				<center>
-					<div class="b">
-						<div class="headerrr">
-							<h3 style="text-align: center;">Comparison Amazon and Ebay iPhones</h3>
-						</div>
-						<div class="lists_para">
-							<ul>
-								<li>Profit  : <input type="" class="inpp" name="" id="profit" readonly=""></li>
-								<li>Shipping Cost : <input type="" class="inpp" name="" id="shipping_cost" readonly=""></li>
-								<li>Model : <input type="" name="" class="inpp" id="model" readonly=""></li>
-								<li>Spec : <input type="" name="" class="inpp" id="spec" readonly=""></li>
-							</ul>
-						</div>
-					</div>
-				</center>
-			</div>
-		</div>
+<div class="spinnerWrap">
+	<div class="spinner-border text-primary" role="status">
+		<span class="sr-only">Loading...</span>
 	</div>
-</body>
-</html>
-<script type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-$("#btn_comp").on('click',function(){
-  var ebay = $("#ebay").val();
-  var amazon = $("#amazon").val();
-  $.ajax({
-      url         : site_url + "get_comaprison values",
-      type        : "POST",
-      data        : {amazon : amazon , ebay:ebay} ,
-      dataType    : 'json',
-      success     : function(data) {
-          $("#profit").val(data.shipping_cost);
-          $("#shipping_cost").val(data.shipping_cost);
-          $("#model").val(data.model);
-          $("#spec").val(data.spec);
-      }
-  });
-});
-</script>
-
-
-
-// async function getJobStatus(y) {
-    //   var number;
-    //   var queryJobURL = `https://api.priceapi.com/v2/jobs/${y}?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-    //   axios({
-    //     method: 'Get',
-    //     url: queryJobURL,
-    //   }).then(function (response) {
-    //     console.log(response);
-    //     setInterval(() => {
-    //       if (response.data.status === "finished") {
-    //         return getJobResult(response.data.job_id)
-    //       }
-    //     }, 2)
-
-
-    //   })
-    // }
-    // async function getJobResult(w) {
-    //   var queryURL = `https://api.priceapi.com/v2/jobs/${w}/download?token=BALXHCDIAFPYBVAAJKFYSCJNRFHOWKAUAACFFGTOAECIAHAKNOZNBXZIESJGZLPJ`;
-    //   axios({
-    //     method: 'Get',
-    //     url: queryURL,
-    //   }).then(function (response) {
-    //     return response;
-    //   })
-    
-    // router.put("/api/burgers/:id", function (req, res) {
-    //   var condition = "id = " + req.params.id;
-
-    //   console.log("condition", condition);
-
-    //   burger.updateOne({ devoured: req.body.devoured }, condition, function (result) {
-    //     if (result.changedRows === 0) {
-    //       // If no rows were changed, then the ID must not exist, so 404.
-    //       return res.status(404).end();
-    //     } else {
-    //       res.status(200).end();
-    //     }
-    //   });
-    // });
-
-    // router.delete("/api/burgers/:id", function(req, res) {
-    //   var condition = "id = " + req.params.id;
-    //   burger.deleteOne(condition, function(result) {
-    //       if (result.changedRows === 0) {
-    //           // If no rows were changed, then the ID must not exist, so 404.
-    //           return res.status(404).end();
-    //       } else {
-    //           res.status(200).end();
-    //       }
-    //   });
-    // });
-    // Export routes for server.js to use.
-
-
-  
-
+	<div class="spinner-border text-secondary" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-success" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-danger" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-warning" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-info" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-light" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+	<div class="spinner-border text-dark" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+</div>
