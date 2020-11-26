@@ -30,6 +30,9 @@
 - Express.
 - Handlebars.
 - My SQL.
+- Price API.
+- mathjs Module.
+- circular-json Module.
 
 # Installation
 - Run npm i.
