@@ -69,7 +69,8 @@ With the aforementioned terms having been defined, the structure of the database
 * Must meet good quality coding standards (indentation, scoping, naming) (pass)
 * Must protect API keys in Node with environment variables (pass)
 
-
+# Commit Notice
+Our Team had issues with commiting code, and due to time constraint we took rather unorthodox way to commit.
 
 # Repository
 
