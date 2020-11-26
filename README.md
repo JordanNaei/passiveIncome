@@ -12,11 +12,18 @@
     </p>
 
 # Application Image
+![Application main screen](https://github.com/JordanNaei/passiveIncome/blob/master/public/img/app1.PNG?raw=true)
+<hr>
 
+![Application Result Page](https://github.com/JordanNaei/passiveIncome/blob/master/public/img/app2.PNG?raw=true)
 
+<hr>
 
+![Application error screen](https://github.com/JordanNaei/passiveIncome/blob/master/public/img/app3.PNG?raw=true)
 
-![Application URL](https://still-island-50748.herokuapp.com/)
+<hr>
+
+- [Application URL](https://still-island-50748.herokuapp.com/)
 
 ## Technologies and Frameworks Used
 - Node.js.
